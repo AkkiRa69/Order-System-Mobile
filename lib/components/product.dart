@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, prefer_interpolation_to_compose_strings
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_store/components/app_image.dart';
 import 'package:grocery_store/model/fruit_model.dart';
@@ -10,12 +11,20 @@ class Product extends StatefulWidget {
   final void Function()? onPressed;
   final void Function()? onTap;
   final void Function(Offset)? onLongPress;
+  final void Function()? onAddToCart;
+  final void Function()? onIncrementQty;
+  final void Function()? onDecrementQty;
+  final int cartQty;
   const Product({
     super.key,
     required this.fruits,
     required this.onTap,
     required this.onPressed,
     required this.isFav,
+    this.onAddToCart,
+    this.onIncrementQty,
+    this.onDecrementQty,
+    this.cartQty = 0,
     this.onLongPress,
   });
 
@@ -108,29 +117,72 @@ class _ProductState extends State<Product> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                child: IconButton(
-                  onPressed: widget.onTap,
-                  icon: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/icons/shop_bag.png",
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        "Add to cart",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                child: widget.cartQty <= 0
+                    ? IconButton(
+                        onPressed: widget.onAddToCart,
+                        icon: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/icons/shop_bag.png",
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              "Add to cart",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: widget.onDecrementQty,
+                            borderRadius: BorderRadius.circular(16),
+                            child: const Padding(
+                              padding: EdgeInsets.all(4.0),
+                              child: Icon(
+                                CupertinoIcons.minus_circle_fill,
+                                color: Color(0xFF6CC51D),
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            widget.cartQty.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          InkWell(
+                            onTap: widget.onIncrementQty,
+                            borderRadius: BorderRadius.circular(16),
+                            child: const Padding(
+                              padding: EdgeInsets.all(4.0),
+                              child: Icon(
+                                CupertinoIcons.plus_circle_fill,
+                                color: Color(0xFF6CC51D),
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
               ),
             ),
           ],

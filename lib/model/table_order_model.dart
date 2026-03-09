@@ -35,6 +35,7 @@ class SubmittedOrder {
     required this.serviceCharge,
     required this.total,
     required this.items,
+    this.createdAt,
   });
 
   final int id;
@@ -46,6 +47,7 @@ class SubmittedOrder {
   final double serviceCharge;
   final double total;
   final List<SubmittedOrderItem> items;
+  final DateTime? createdAt;
 
   factory SubmittedOrder.fromJson(Map<String, dynamic> json) {
     final rawItems = (json['items'] as List?) ?? const [];
@@ -62,6 +64,7 @@ class SubmittedOrder {
           .whereType<Map>()
           .map((e) => SubmittedOrderItem.fromJson(Map<String, dynamic>.from(e)))
           .toList(),
+      createdAt: DateTime.tryParse((json['created_at'] ?? '').toString()),
     );
   }
 }

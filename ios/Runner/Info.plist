@@ -52,5 +52,7 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>This app uses the camera to scan table QR codes.</string>
 </dict>
 </plist>

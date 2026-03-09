@@ -1,7 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_store/constant/appcolor.dart';
-import 'package:grocery_store/pages/controller_page.dart';
+import 'package:grocery_store/pages/scan_qr_page.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class SplashScreen extends StatelessWidget {
           ),
         ],
       ),
-      nextScreen: const ControllerPage(),
+      nextScreen: const ScanQrPage(),
       backgroundColor: AppColor.appBarColor,
       splashIconSize: MediaQuery.of(context).size.height,
       duration: 3000,

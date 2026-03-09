@@ -12,18 +12,51 @@ class TableOrderProvider extends ChangeNotifier {
   bool _isSubmitting = false;
   String? _errorMessage;
   String _tableCode = '';
+  String? _tableName;
   SubmittedOrder? _lastOrder;
   InvoiceModel? _lastInvoice;
 
   bool get isSubmitting => _isSubmitting;
   String? get errorMessage => _errorMessage;
   String get tableCode => _tableCode;
+  String? get tableName => _tableName;
   SubmittedOrder? get lastOrder => _lastOrder;
   InvoiceModel? get lastInvoice => _lastInvoice;
 
   void setTableCode(String input) {
     _tableCode = _extractTableCode(input);
+    _tableName = null;
     notifyListeners();
+  }
+
+  Future<bool> validateAndSetTableCode(String input) async {
+    final extractedCode = _extractTableCode(input);
+    if (extractedCode.isEmpty) {
+      _errorMessage = 'Invalid QR code.';
+      notifyListeners();
+      return false;
+    }
+
+    try {
+      final result = await _apiService.validateTableCode(extractedCode);
+      final isValid = result['valid'] == true;
+      if (!isValid) {
+        _errorMessage =
+            (result['message'] ?? 'Invalid table QR code').toString();
+        notifyListeners();
+        return false;
+      }
+
+      _tableCode = (result['table_code'] ?? extractedCode).toString();
+      _tableName = result['table_name']?.toString();
+      _errorMessage = null;
+      notifyListeners();
+      return true;
+    } catch (_) {
+      _errorMessage = 'Unable to verify table QR.';
+      notifyListeners();
+      return false;
+    }
   }
 
   Future<bool> submitCartOrder({

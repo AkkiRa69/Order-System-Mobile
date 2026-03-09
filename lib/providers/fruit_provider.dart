@@ -314,15 +314,40 @@ class FruitProvider extends ChangeNotifier {
     return _shoppingCart.isEmpty ? 1 : 0;
   }
 
+  int cartQuantity(FruitModel fruit) {
+    return fruit.qty;
+  }
+
   void addProductToCart(FruitModel fruit) {
+    if (fruit.qty <= 0) {
+      fruit.qty = 1;
+    }
     if (!_shoppingCart.contains(fruit)) {
       _shoppingCart.add(fruit);
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void removeProductFromCart(FruitModel fruit) {
     _shoppingCart.remove(fruit);
+    fruit.qty = 0;
+    notifyListeners();
+  }
+
+  void incrementCartQuantity(FruitModel fruit) {
+    if (!_shoppingCart.contains(fruit)) {
+      _shoppingCart.add(fruit);
+    }
+    fruit.qty++;
+    notifyListeners();
+  }
+
+  void decrementCartQuantity(FruitModel fruit) {
+    if (fruit.qty <= 0) return;
+    fruit.qty--;
+    if (fruit.qty == 0) {
+      _shoppingCart.remove(fruit);
+    }
     notifyListeners();
   }
 
